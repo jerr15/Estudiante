@@ -119,35 +119,42 @@
                         <!-- AÑO A CURSAR - AHORA ES UN SELECT Y VA PRIMERO -->
                         <div>
                             <label for="ano_cursar" class="block text-sm font-medium text-gray-700">Año a Cursar:</label>
-                            <select name="ano_cursar" id="ano_cursar" /* required */
+                            <select name="ano_cursar" id="ano_cursar"
                                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                                 <!-- Opciones generadas por JavaScript -->
                             </select>
                         </div>
-                        <!-- AÑO ESCOLAR - VA SEGUNDO -->
+                        <!-- AÑO ESCOLAR - AHORA ES UN SELECT -->
                         <div>
                             <label for="anoEsc" class="block text-sm font-medium text-gray-700">Año Escolar:</label>
-                            <input type="text" name="anoEsc" id="anoEsc" /* required */
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
+                            <select name="anoEsc" id="anoEsc"
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
+                                <option value="">Selecciona</option>
+                                <option value="1°">1°</option>
+                                <option value="2°">2°</option>
+                                <option value="3°">3°</option>
+                                <option value="4°">4°</option>
+                                <option value="5°">5°</option>
+                            </select>
                         </div>
                         <div>
                             <label for="nomEst" class="block text-sm font-medium text-gray-700">Nombres:</label>
-                            <input type="text" name="nomEst" id="nomEst" /* required */
+                            <input type="text" name="nomEst" id="nomEst"
                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="apeEst" class="block text-sm font-medium text-gray-700">Apellidos:</label>
-                            <input type="text" name="apeEst" id="apeEst" /* required */
+                            <input type="text" name="apeEst" id="apeEst"
                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="ciEst" class="block text-sm font-medium text-gray-700">Cédula:</label>
-                            <input type="text" name="ciEst" id="ciEst" /* required */
+                            <input type="text" name="ciEst" id="ciEst" inputmode="numeric"
                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="sexoEst" class="block text-sm font-medium text-gray-700">Sexo:</label>
-                            <select name="sexoEst" id="sexoEst" /* required */
+                            <select name="sexoEst" id="sexoEst"
                                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                                 <option value="">Selecciona</option>
                                 <option value="M">Masculino</option>
@@ -156,7 +163,7 @@
                         </div>
                         <div>
                             <label for="fNacEst" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento:</label>
-                            <input type="date" name="fNacEst" id="fNacEst" /* required */
+                            <input type="date" name="fNacEst" id="fNacEst"
                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
@@ -172,7 +179,7 @@
                         <!-- ESTADO DE NACIMIENTO - AHORA ES UN SELECT -->
                         <div>
                             <label for="estNacEst" class="block text-sm font-medium text-gray-700">Estado de Nacimiento:</label>
-                            <select name="estNacEst" id="estNacEst" /* required */
+                            <select name="estNacEst" id="estNacEst"
                                     class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                                 <option value="">Selecciona un estado</option>
                                 <option value="Amazonas">Amazonas</option>
@@ -298,17 +305,17 @@
                         </div>
                         <div>
                             <label for="ciMad" class="block text-sm font-medium text-gray-700">C.I.:</label>
-                            <input type="text" name="ciMad" id="ciMad"
+                            <input type="text" name="ciMad" id="ciMad" inputmode="numeric"
                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="telHabMad" class="block text-sm font-medium text-gray-700">Teléfono Habitación (NO CELULAR):</label>
-                            <input type="tel" name="telHabMad" id="telHabMad"
+                            <input type="tel" name="telHabMad" id="telHabMad" inputmode="numeric"
                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="celMad" class="block text-sm font-medium text-gray-700">Celular:</label>
-                            <input type="tel" name="celMad" id="celMad"
+                            <input type="tel" name="celMad" id="celMad" inputmode="numeric"
                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div class="md:col-span-2">
@@ -357,17 +364,17 @@
                         </div>
                         <div>
                             <label for="ciPad" class="block text-sm font-medium text-gray-700">C.I.:</label>
-                            <input type="text" name="ciPad" id="ciPad"
+                            <input type="text" name="ciPad" id="ciPad" inputmode="numeric"
                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="telHabPad" class="block text-sm font-medium text-gray-700">Teléfono Habitación (NO CELULAR):</label>
-                            <input type="tel" name="telHabPad" id="telHabPad"
+                            <input type="tel" name="telHabPad" id="telHabPad" inputmode="numeric"
                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="celPad" class="block text-sm font-medium text-gray-700">Celular:</label>
-                            <input type="tel" name="celPad" id="celPad"
+                            <input type="tel" name="celPad" id="celPad" inputmode="numeric"
                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div class="md:col-span-2">
@@ -416,17 +423,17 @@
                         </div>
                         <div>
                             <label for="ciRep" class="block text-sm font-medium text-gray-700">C.I.:</label>
-                            <input type="text" name="ciRep" id="ciRep"
+                            <input type="text" name="ciRep" id="ciRep" inputmode="numeric"
                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="telHabRep" class="block text-sm font-medium text-gray-700">Teléfono Habitación (NO CELULAR):</label>
-                            <input type="tel" name="telHabRep" id="telHabRep"
+                            <input type="tel" name="telHabRep" id="telHabRep" inputmode="numeric"
                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="celRep" class="block text-sm font-medium text-gray-700">Celular:</label>
-                            <input type="tel" name="celRep" id="celRep"
+                            <input type="tel" name="celRep" id="celRep" inputmode="numeric"
                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div class="md:col-span-2">
@@ -466,7 +473,7 @@
                         </div>
                         <div>
                             <label for="contEmerg" class="block text-sm font-medium text-gray-700">Contacto de Emergencia:</label>
-                            <input type="text" name="contEmerg" id="contEmerg"
+                            <input type="tel" name="contEmerg" id="contEmerg" inputmode="numeric"
                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div class="md:col-span-2">
@@ -701,6 +708,68 @@
             }
             edadEstInput.value = age >= 0 ? age : ''; // Ensure age is not negative
         });
+
+        // --- Funciones para restringir la entrada de texto en tiempo real ---
+
+        // Restringe a solo números
+        function restrictToNumbers(event) {
+            // Permite solo dígitos. No permite el signo de más, menos, o punto decimal.
+            this.value = this.value.replace(/[^0-9]/g, '');
+        }
+
+        // Restringe a solo letras (incluyendo acentos y ñ) y espacios
+        function restrictToLetters(event) {
+            // Permite letras (mayúsculas y minúsculas), letras acentuadas, ñ/Ñ y espacios
+            this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '');
+        }
+
+        // Restringe a letras, números, espacios y algunos símbolos comunes para direcciones/nombres de planteles
+        function restrictToAlphanumericSpecial(event) {
+            // Permite letras, números, acentos, ñ/Ñ, espacios, puntos, comas y guiones
+            this.value = this.value.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ\s.,-]/g, '');
+        }
+
+        // Asignar las funciones de restricción a los campos correspondientes
+        document.addEventListener('DOMContentLoaded', () => {
+            // Campos de solo números
+            document.getElementById('ciEst').addEventListener('input', restrictToNumbers);
+            document.getElementById('ciMad').addEventListener('input', restrictToNumbers);
+            document.getElementById('ciPad').addEventListener('input', restrictToNumbers);
+            document.getElementById('ciRep').addEventListener('input', restrictToNumbers);
+            document.getElementById('telHabMad').addEventListener('input', restrictToNumbers);
+            document.getElementById('celMad').addEventListener('input', restrictToNumbers);
+            document.getElementById('telHabPad').addEventListener('input', restrictToNumbers);
+            document.getElementById('celPad').addEventListener('input', restrictToNumbers);
+            document.getElementById('telHabRep').addEventListener('input', restrictToNumbers);
+            document.getElementById('celRep').addEventListener('input', restrictToNumbers);
+            document.getElementById('contEmerg').addEventListener('input', restrictToNumbers);
+
+            // Campos de solo letras
+            document.getElementById('nomEst').addEventListener('input', restrictToLetters);
+            document.getElementById('apeEst').addEventListener('input', restrictToLetters);
+            document.getElementById('lugNacEst').addEventListener('input', restrictToLetters);
+            document.getElementById('nomMad').addEventListener('input', restrictToLetters);
+            document.getElementById('profMad').addEventListener('input', restrictToLetters);
+            document.getElementById('cargoMad').addEventListener('input', restrictToLetters);
+            document.getElementById('nomPad').addEventListener('input', restrictToLetters);
+            document.getElementById('profPad').addEventListener('input', restrictToLetters);
+            document.getElementById('cargoPad').addEventListener('input', restrictToLetters);
+            document.getElementById('nomRep').addEventListener('input', restrictToLetters);
+            document.getElementById('profRep').addEventListener('input', restrictToLetters);
+            document.getElementById('cargoRep').addEventListener('input', restrictToLetters);
+            document.getElementById('parentesco').addEventListener('input', restrictToLetters);
+            document.getElementById('nomHerm').addEventListener('input', restrictToLetters); // Nombre del hermano también solo letras
+
+            // Campos alfanuméricos con algunos símbolos (para nombres de planteles, enfermedades, actividades, trabajos)
+            document.getElementById('plantelProc').addEventListener('input', restrictToAlphanumericSpecial);
+            document.getElementById('enfDisc').addEventListener('input', restrictToAlphanumericSpecial);
+            document.getElementById('actInt').addEventListener('input', restrictToAlphanumericSpecial);
+            document.getElementById('trabMad').addEventListener('input', restrictToAlphanumericSpecial);
+            document.getElementById('trabPad').addEventListener('input', restrictToAlphanumericSpecial);
+            document.getElementById('trabRep').addEventListener('input', restrictToAlphanumericSpecial);
+            document.getElementById('anoHerm').addEventListener('input', restrictToAlphanumericSpecial); // Año del hermano puede ser "1er año"
+        });
+
 
         // Event listener for form submission (only activated on the last step)
         studentForm.addEventListener('submit', async (event) => {
