@@ -19,6 +19,64 @@
         .form-step.active {
             display: block;
         }
+        /* Estilo para los campos de entrada al enfocarse */
+        input:focus, textarea:focus, select:focus {
+            outline: none !important;
+            border-color: #6366f1 !important; /* Color índigo */
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5) !important; /* Sombra índigo */
+        }
+
+        /* Estilos para el indicador de progreso */
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 9999px; /* rounded-full */
+            height: 8px; /* h-2 */
+            overflow: hidden;
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #4f46e5; /* indigo-600 */
+            width: 0%; /* Se controla con JS */
+            border-radius: 9999px; /* rounded-full */
+            transition: width 0.5s ease-in-out;
+        }
+
+        /* Estilos para el modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2.5rem; /* p-10 */
+            border-radius: 1rem; /* rounded-2xl */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); /* shadow-2xl */
+            text-align: center;
+            max-width: 90%;
+            width: 400px;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease-in-out;
+        }
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body class="bg-gradient-to-r from-blue-500 to-purple-600 min-h-screen flex items-center justify-center p-4">
@@ -30,9 +88,14 @@
             Por favor, completa los datos del estudiante y selecciona las secciones opcionales.
         </p>
 
+        <!-- Indicador de Progreso -->
+        <div class="progress-bar-container">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+
         <!-- Formulario de Inscripción -->
         <!-- URL de Google Apps Script para el envío del formulario -->
-        <form action="https://script.google.com/macros/s/AKfycbxbf6PPA4FhqmTj7SHa6fVREft47NPGB4ZQ9Z7Lvr8gkzjvbc41tuWzYDTds4bsDEiLfw/exec" method="POST" class="space-y-6" id="studentForm">
+        <form action="https://script.google.com/macros/s/AKfycbxMlNq4PZJ0YGJ0uYbfctj1q725ADYZvfDELZLlIuGgihlwgY6qrksviV-uWiLSCrTerw/exec" method="POST" class="space-y-6" id="studentForm">
 
             <!-- Paso 1: Datos del Estudiante y Opciones -->
             <div id="step1" class="form-step">
@@ -40,16 +103,12 @@
                     <legend class="text-2xl font-semibold text-gray-800 mb-4 px-2">Opciones de Ficha</legend>
                     <div class="space-y-2">
                         <div class="flex items-center">
-                            <input type="checkbox" id="enableMadre" checked class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                            <input type="checkbox" id="enableMadre" checked class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 transition-colors duration-200">
                             <label for="enableMadre" class="ml-2 block text-base font-medium text-gray-700">Incluir Datos Madre</label>
                         </div>
                         <div class="flex items-center">
-                            <input type="checkbox" id="enablePadre" checked class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                            <input type="checkbox" id="enablePadre" checked class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 transition-colors duration-200">
                             <label for="enablePadre" class="ml-2 block text-base font-medium text-gray-700">Incluir Datos Padre</label>
-                        </div>
-                        <div class="flex items-center">
-                            <input type="checkbox" id="enableRep" checked class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
-                            <label for="enableRep" class="ml-2 block text-base font-medium text-gray-700">Incluir Datos Representante</label>
                         </div>
                     </div>
                 </fieldset>
@@ -57,35 +116,39 @@
                 <fieldset class="border border-gray-300 p-6 rounded-lg shadow-sm">
                     <legend class="text-2xl font-semibold text-gray-800 mb-4 px-2">Datos del Estudiante</legend>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- AÑO A CURSAR - AHORA ES UN SELECT Y VA PRIMERO -->
+                        <div>
+                            <label for="ano_cursar" class="block text-sm font-medium text-gray-700">Año a Cursar:</label>
+                            <select name="ano_cursar" id="ano_cursar" required
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
+                                <!-- Opciones generadas por JavaScript -->
+                            </select>
+                        </div>
+                        <!-- AÑO ESCOLAR - VA SEGUNDO -->
+                        <div>
+                            <label for="anoEsc" class="block text-sm font-medium text-gray-700">Año Escolar:</label>
+                            <input type="text" name="anoEsc" id="anoEsc" required
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
+                        </div>
                         <div>
                             <label for="nomEst" class="block text-sm font-medium text-gray-700">Nombres:</label>
-                            <!-- 'required' comentado para pruebas -->
-                            <input type="text" name="nomEst" id="nomEst"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            <input type="text" name="nomEst" id="nomEst" required
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="apeEst" class="block text-sm font-medium text-gray-700">Apellidos:</label>
-                            <!-- 'required' comentado para pruebas -->
-                            <input type="text" name="apeEst" id="apeEst"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            <input type="text" name="apeEst" id="apeEst" required
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="ciEst" class="block text-sm font-medium text-gray-700">Cédula:</label>
-                            <!-- 'required' comentado para pruebas -->
-                            <input type="text" name="ciEst" id="ciEst"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                        </div>
-                        <div>
-                            <label for="edadEst" class="block text-sm font-medium text-gray-700">Edad:</label>
-                            <!-- 'required' comentado para pruebas -->
-                            <input type="number" name="edadEst" id="edadEst"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            <input type="text" name="ciEst" id="ciEst" required
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="sexoEst" class="block text-sm font-medium text-gray-700">Sexo:</label>
-                            <!-- 'required' comentado para pruebas -->
-                            <select name="sexoEst" id="sexoEst"
-                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            <select name="sexoEst" id="sexoEst" required
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                                 <option value="">Selecciona</option>
                                 <option value="M">Masculino</option>
                                 <option value="F">Femenino</option>
@@ -93,93 +156,109 @@
                         </div>
                         <div>
                             <label for="fNacEst" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento:</label>
-                            <!-- 'required' comentado para pruebas -->
-                            <input type="date" name="fNacEst" id="fNacEst"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            <input type="date" name="fNacEst" id="fNacEst" required
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
+                        </div>
+                        <div>
+                            <label for="edadEst" class="block text-sm font-medium text-gray-700">Edad:</label>
+                            <input type="number" name="edadEst" id="edadEst" readonly
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="lugNacEst" class="block text-sm font-medium text-gray-700">Lugar de Nacimiento:</label>
-                            <!-- 'required' comentado para pruebas -->
                             <input type="text" name="lugNacEst" id="lugNacEst"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
+                        <!-- ESTADO DE NACIMIENTO - AHORA ES UN SELECT -->
                         <div>
                             <label for="estNacEst" class="block text-sm font-medium text-gray-700">Estado de Nacimiento:</label>
-                            <!-- 'required' comentado para pruebas -->
-                            <input type="text" name="estNacEst" id="estNacEst"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            <select name="estNacEst" id="estNacEst" required
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
+                                <option value="">Selecciona un estado</option>
+                                <option value="Amazonas">Amazonas</option>
+                                <option value="Anzoátegui">Anzoátegui</option>
+                                <option value="Apure">Apure</option>
+                                <option value="Aragua">Aragua</option>
+                                <option value="Barinas">Barinas</option>
+                                <option value="Bolívar">Bolívar</option>
+                                <option value="Carabobo">Carabobo</option>
+                                <option value="Cojedes">Cojedes</option>
+                                <option value="Delta Amacuro">Delta Amacuro</option>
+                                <option value="Distrito Capital">Distrito Capital</option>
+                                <option value="Falcón">Falcón</option>
+                                <option value="Guárico">Guárico</option>
+                                <option value="La Guaira">La Guaira</option>
+                                <option value="Lara">Lara</option>
+                                <option value="Mérida">Mérida</option>
+                                <option value="Miranda">Miranda</option>
+                                <option value="Monagas">Monagas</option>
+                                <option value="Nueva Esparta">Nueva Esparta</option>
+                                <option value="Portuguesa">Portuguesa</option>
+                                <option value="Sucre">Sucre</option>
+                                <option value="Táchira">Táchira</option>
+                                <option value="Trujillo">Trujillo</option>
+                                <option value="Yaracuy">Yaracuy</option>
+                                <option value="Zulia">Zulia</option>
+                            </select>
                         </div>
                         <div>
                             <label for="plantelProc" class="block text-sm font-medium text-gray-700">Plantel de Procedencia:</label>
                             <input type="text" name="plantelProc" id="plantelProc"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div class="md:col-span-2">
                             <label for="dirHabEst" class="block text-sm font-medium text-gray-700">Dirección de Habitación:</label>
-                            <!-- 'required' comentado para pruebas -->
                             <textarea name="dirHabEst" id="dirHabEst" rows="2"
-                                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 resize-y"></textarea>
+                                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 resize-y"></textarea>
                         </div>
                         <div class="md:col-span-2">
                             <label for="enfDisc" class="block text-sm font-medium text-gray-700">Alguna Enfermedad y/o Discapacidad:</label>
                             <input type="text" name="enfDisc" id="enfDisc"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="corrEst" class="block text-sm font-medium text-gray-700">Correo Electrónico Estudiante:</label>
                             <input type="email" name="corrEst" id="corrEst"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div class="md:col-span-2 flex items-center space-x-4">
                             <label class="block text-sm font-medium text-gray-700">Tiene hermanos en el plantel:</label>
-                            <input type="radio" name="tieneHerm" id="tieneHermSi" value="Sí" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300">
+                            <input type="radio" name="tieneHerm" id="tieneHermSi" value="Sí" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded transition-colors duration-200">
                             <label for="tieneHermSi" class="text-sm font-medium text-gray-700">Sí</label>
-                            <input type="radio" name="tieneHerm" id="tieneHermNo" value="No" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300">
+                            <input type="radio" name="tieneHerm" id="tieneHermNo" value="No" checked class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded transition-colors duration-200">
                             <label for="tieneHermNo" class="text-sm font-medium text-gray-700">No</label>
                         </div>
                         <div id="hermanoInfo" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:col-span-2 hidden">
                             <div>
                                 <label for="nomHerm" class="block text-sm font-medium text-gray-700">Nombre Hermano:</label>
                                 <input type="text" name="nomHerm" id="nomHerm"
-                                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                             </div>
                             <div>
                                 <label for="anoHerm" class="block text-sm font-medium text-gray-700">Año Hermano:</label>
                                 <input type="text" name="anoHerm" id="anoHerm"
-                                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                             </div>
-                        </div>
-                        <div>
-                            <label for="anoEsc" class="block text-sm font-medium text-gray-700">Año Escolar:</label>
-                            <!-- 'required' comentado para pruebas -->
-                            <input type="text" name="anoEsc" id="anoEsc"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                        </div>
-                        <div>
-                            <label for="ano_cursar" class="block text-sm font-medium text-gray-700">Año a Cursar:</label>
-                            <!-- 'required' comentado para pruebas -->
-                            <input type="text" name="ano_cursar" id="ano_cursar"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                         </div>
                         <div>
                             <label for="estatura" class="block text-sm font-medium text-gray-700">Estatura (cm):</label>
                             <input type="number" name="estatura" id="estatura" step="0.01"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="tCamisa" class="block text-sm font-medium text-gray-700">Talla Camisa:</label>
                             <input type="text" name="tCamisa" id="tCamisa"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="tPantalon" class="block text-sm font-medium text-gray-700">Talla Pantalón:</label>
                             <input type="text" name="tPantalon" id="tPantalon"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div class="md:col-span-2">
                             <label for="actInt" class="block text-sm font-medium text-gray-700">Actividad de Interés:</label>
                             <input type="text" name="actInt" id="actInt"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                     </div>
                 </fieldset>
@@ -192,57 +271,53 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label for="nomMad" class="block text-sm font-medium text-gray-700">Nombres y Apellidos:</label>
-                            <!-- 'required' comentado para pruebas -->
                             <input type="text" name="nomMad" id="nomMad"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="ciMad" class="block text-sm font-medium text-gray-700">C.I.:</label>
-                            <!-- 'required' comentado para pruebas -->
                             <input type="text" name="ciMad" id="ciMad"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="telHabMad" class="block text-sm font-medium text-gray-700">Teléfono Habitación (NO CELULAR):</label>
                             <input type="tel" name="telHabMad" id="telHabMad"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="celMad" class="block text-sm font-medium text-gray-700">Celular:</label>
-                            <!-- 'required' comentado para pruebas -->
                             <input type="tel" name="celMad" id="celMad"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div class="md:col-span-2">
                             <label for="dirHabMad" class="block text-sm font-medium text-gray-700">Dirección de Habitación:</label>
-                            <!-- 'required' comentado para pruebas -->
                             <textarea name="dirHabMad" id="dirHabMad" rows="2"
-                                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 resize-y"></textarea>
+                                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 resize-y"></textarea>
                         </div>
                         <div>
                             <label for="profMad" class="block text-sm font-medium text-gray-700">Profesión:</label>
                             <input type="text" name="profMad" id="profMad"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="trabMad" class="block text-sm font-medium text-gray-700">Dónde Trabaja:</label>
                             <input type="text" name="trabMad" id="trabMad"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="cargoMad" class="block text-sm font-medium text-gray-700">Cargo:</label>
                             <input type="text" name="cargoMad" id="cargoMad"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div class="md:col-span-2">
                             <label for="dirTrabMad" class="block text-sm font-medium text-gray-700">Dirección del Trabajo:</label>
                             <textarea name="dirTrabMad" id="dirTrabMad" rows="2"
-                                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 resize-y"></textarea>
+                                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 resize-y"></textarea>
                         </div>
                         <div>
                             <label for="corrMad" class="block text-sm font-medium text-gray-700">Correo Electrónico Madre:</label>
                             <input type="email" name="corrMad" id="corrMad"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                     </div>
                 </fieldset>
@@ -255,135 +330,127 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label for="nomPad" class="block text-sm font-medium text-gray-700">Nombres y Apellidos:</label>
-                            <!-- 'required' comentado para pruebas -->
                             <input type="text" name="nomPad" id="nomPad"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="ciPad" class="block text-sm font-medium text-gray-700">C.I.:</label>
-                            <!-- 'required' comentado para pruebas -->
                             <input type="text" name="ciPad" id="ciPad"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="telHabPad" class="block text-sm font-medium text-gray-700">Teléfono Habitación (NO CELULAR):</label>
                             <input type="tel" name="telHabPad" id="telHabPad"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="celPad" class="block text-sm font-medium text-gray-700">Celular:</label>
-                            <!-- 'required' comentado para pruebas -->
                             <input type="tel" name="celPad" id="celPad"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div class="md:col-span-2">
                             <label for="dirHabPad" class="block text-sm font-medium text-gray-700">Dirección de Habitación:</label>
-                            <!-- 'required' comentado para pruebas -->
                             <textarea name="dirHabPad" id="dirHabPad" rows="2"
-                                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 resize-y"></textarea>
+                                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 resize-y"></textarea>
                         </div>
                         <div>
                             <label for="profPad" class="block text-sm font-medium text-gray-700">Profesión:</label>
                             <input type="text" name="profPad" id="profPad"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="trabPad" class="block text-sm font-medium text-gray-700">Dónde Trabaja:</label>
                             <input type="text" name="trabPad" id="trabPad"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="cargoPad" class="block text-sm font-medium text-gray-700">Cargo:</label>
                             <input type="text" name="cargoPad" id="cargoPad"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div class="md:col-span-2">
                             <label for="dirTrabPad" class="block text-sm font-medium text-gray-700">Dirección del Trabajo:</label>
                             <textarea name="dirTrabPad" id="dirTrabPad" rows="2"
-                                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 resize-y"></textarea>
+                                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 resize-y"></textarea>
                         </div>
                         <div>
                             <label for="corrPad" class="block text-sm font-medium text-gray-700">Correo Electrónico Padre:</label>
                             <input type="email" name="corrPad" id="corrPad"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                     </div>
                 </fieldset>
             </div>
 
-            <!-- Paso 4: Datos del Representante en el Colegio -->
+            <!-- Paso 4: Datos del Representante en el Colegio (Siempre incluido) -->
             <div id="step4" class="form-step">
                 <fieldset class="border border-gray-300 p-6 rounded-lg shadow-sm">
                     <legend class="text-2xl font-semibold text-gray-800 mb-4 px-2">Datos del Representante en el Colegio</legend>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label for="nomRep" class="block text-sm font-medium text-gray-700">Nombres y Apellidos Representante:</label>
-                            <!-- 'required' comentado para pruebas -->
                             <input type="text" name="nomRep" id="nomRep"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="ciRep" class="block text-sm font-medium text-gray-700">C.I.:</label>
-                            <!-- 'required' comentado para pruebas -->
                             <input type="text" name="ciRep" id="ciRep"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="telHabRep" class="block text-sm font-medium text-gray-700">Teléfono Habitación (NO CELULAR):</label>
                             <input type="tel" name="telHabRep" id="telHabRep"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="celRep" class="block text-sm font-medium text-gray-700">Celular:</label>
-                            <!-- 'required' comentado para pruebas -->
                             <input type="tel" name="celRep" id="celRep"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div class="md:col-span-2">
                             <label for="dirHabRep" class="block text-sm font-medium text-gray-700">Dirección de Habitación:</label>
-                            <!-- 'required' comentado para pruebas -->
                             <textarea name="dirHabRep" id="dirHabRep" rows="2"
-                                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 resize-y"></textarea>
+                                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 resize-y"></textarea>
                         </div>
                         <div>
                             <label for="profRep" class="block text-sm font-medium text-gray-700">Profesión:</label>
                             <input type="text" name="profRep" id="profRep"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="trabRep" class="block text-sm font-medium text-gray-700">Dónde Trabaja:</label>
                             <input type="text" name="trabRep" id="trabRep"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="cargoRep" class="block text-sm font-medium text-gray-700">Cargo:</label>
                             <input type="text" name="cargoRep" id="cargoRep"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div class="md:col-span-2">
                             <label for="dirTrabRep" class="block text-sm font-medium text-gray-700">Dirección del Trabajo:</label>
                             <textarea name="dirTrabRep" id="dirTrabRep" rows="2"
-                                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 resize-y"></textarea>
+                                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 resize-y"></textarea>
                         </div>
                         <div>
                             <label for="corrRep" class="block text-sm font-medium text-gray-700">Correo Electrónico Representante:</label>
                             <input type="email" name="corrRep" id="corrRep"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="parentesco" class="block text-sm font-medium text-gray-700">Parentesco con el Estudiante:</label>
                             <input type="text" name="parentesco" id="parentesco"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="contEmerg" class="block text-sm font-medium text-gray-700">Contacto de Emergencia:</label>
                             <input type="text" name="contEmerg" id="contEmerg"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div class="md:col-span-2">
                             <label for="autRetirar" class="block text-sm font-medium text-gray-700">Personas Autorizadas para Retirar al Menor:</label>
                             <textarea name="autRetirar" id="autRetirar" rows="2"
-                                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 resize-y"></textarea>
+                                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 resize-y"></textarea>
                         </div>
                     </div>
                 </fieldset>
@@ -410,12 +477,27 @@
         </p>
     </div>
 
+    <!-- Modal de Confirmación -->
+    <div id="confirmationModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">¡Ficha Generada con Éxito!</h2>
+            <p class="text-lg text-gray-700 mb-6">
+                Por favor, revisa tu correo electrónico para descargar el archivo de la ficha.
+                Una vez descargado, puedes imprimirlo.
+            </p>
+            <button type="button" id="closeModalBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50">
+                Cerrar
+            </button>
+        </div>
+    </div>
+
     <script>
         const studentForm = document.getElementById('studentForm');
         const formStatus = document.getElementById('formStatus');
         const documentLink = document.getElementById('documentLink');
         const documentLinkAnchor = document.querySelector('#documentLink a');
         const formDescription = document.getElementById('form-description');
+        const progressBar = document.getElementById('progressBar');
 
         const formSteps = document.querySelectorAll('.form-step'); // Todos los divs de paso
         let currentStepIndex = 0; // Índice en el array `visibleSteps`
@@ -429,7 +511,10 @@
         // Checkboxes para las secciones opcionales
         const enableMadreCheckbox = document.getElementById('enableMadre');
         const enablePadreCheckbox = document.getElementById('enablePadre');
-        const enableRepCheckbox = document.getElementById('enableRep');
+
+        // Modal elements
+        const confirmationModal = document.getElementById('confirmationModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
 
         const stepDescriptions = {
             'step1': "Por favor, completa los datos del estudiante y selecciona las secciones opcionales.",
@@ -438,35 +523,43 @@
             'step4': "Finalmente, completa los datos del representante en el colegio."
         };
 
-        // Función para actualizar el array de pasos visibles
+        // Function to update the array of visible steps
         function updateVisibleSteps() {
-            visibleSteps = ['step1']; // El paso 1 siempre es visible
+            visibleSteps = ['step1']; // Step 1 is always visible
             if (enableMadreCheckbox.checked) {
                 visibleSteps.push('step2');
             }
             if (enablePadreCheckbox.checked) {
                 visibleSteps.push('step3');
             }
-            if (enableRepCheckbox.checked) {
+            // Step 4 (representative) is always included if its div exists
+            if (document.getElementById('step4')) {
                 visibleSteps.push('step4');
             }
-            // Asegurarse de que el índice actual sea válido si las opciones cambian
+            // Ensure current index is valid if options change
             if (currentStepIndex >= visibleSteps.length) {
                 currentStepIndex = visibleSteps.length - 1;
             }
-            showCurrentStep(); // Mostrar el paso actual después de actualizar la lista
+            showCurrentStep(); // Show current step after updating the list
+            updateProgressBar();
         }
 
-        // Función para mostrar el paso actual y ocultar los demás
-        function showCurrentStep() {
-            formSteps.forEach(step => step.classList.remove('active')); // Oculta todos los pasos
-            const currentStepId = visibleSteps[currentStepIndex];
-            document.getElementById(currentStepId).classList.add('active'); // Muestra el paso actual
+        // Function to update the progress bar
+        function updateProgressBar() {
+            const progress = ((currentStepIndex + 1) / visibleSteps.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
 
-            // Actualiza la descripción del formulario
+        // Function to show the current step and hide others
+        function showCurrentStep() {
+            formSteps.forEach(step => step.classList.remove('active')); // Hide all steps
+            const currentStepId = visibleSteps[currentStepIndex];
+            document.getElementById(currentStepId).classList.add('active'); // Show current step
+
+            // Update form description
             formDescription.textContent = stepDescriptions[currentStepId];
 
-            // Actualiza la visibilidad de los botones de navegación
+            // Update visibility of navigation buttons
             if (currentStepIndex === 0) {
                 prevStepBtn.classList.add('hidden');
             } else {
@@ -476,19 +569,23 @@
             if (currentStepIndex === visibleSteps.length - 1) {
                 nextStepBtn.classList.add('hidden');
                 submitFormBtn.classList.remove('hidden');
+                // Ensure formStatus and documentLink are hidden when reaching the final step before submission
+                formStatus.classList.add('hidden');
+                documentLink.classList.add('hidden');
             } else {
                 nextStepBtn.classList.remove('hidden');
                 submitFormBtn.classList.add('hidden');
-                // Actualiza el texto del botón Siguiente
+                // Update next button text
                 const nextStepId = visibleSteps[currentStepIndex + 1];
                 if (nextStepId === 'step2') nextStepBtn.textContent = 'Siguiente: Datos Madre';
                 else if (nextStepId === 'step3') nextStepBtn.textContent = 'Siguiente: Datos Padre';
                 else if (nextStepId === 'step4') nextStepBtn.textContent = 'Siguiente: Datos Representante';
-                else nextStepBtn.textContent = 'Siguiente'; // Por si acaso
+                else nextStepBtn.textContent = 'Siguiente'; // Fallback
             }
+            updateProgressBar();
         }
 
-        // Event listeners para los botones de navegación
+        // Event listeners for navigation buttons
         nextStepBtn.addEventListener('click', () => {
             if (currentStepIndex < visibleSteps.length - 1) {
                 currentStepIndex++;
@@ -503,12 +600,11 @@
             }
         });
 
-        // Event listeners para los checkboxes de secciones opcionales
+        // Event listeners for optional section checkboxes
         enableMadreCheckbox.addEventListener('change', updateVisibleSteps);
         enablePadreCheckbox.addEventListener('change', updateVisibleSteps);
-        enableRepCheckbox.addEventListener('change', updateVisibleSteps);
 
-        // Lógica para mostrar/ocultar campos de hermano (dentro del paso 1)
+        // Logic to show/hide sibling fields (within step 1)
         const tieneHermSi = document.getElementById('tieneHermSi');
         const tieneHermNo = document.getElementById('tieneHermNo');
         const hermanoInfo = document.getElementById('hermanoInfo');
@@ -523,42 +619,86 @@
 
         tieneHermSi.addEventListener('change', toggleHermanoInfo);
         tieneHermNo.addEventListener('change', toggleHermanoInfo);
-        // Inicializar al cargar la página
+        // Initialize on page load
         toggleHermanoInfo();
 
+        // Function to populate "Ano a Cursar" options
+        function populateAnoCursar() {
+            const selectElement = document.getElementById('ano_cursar');
+            const currentYear = new Date().getFullYear();
+            // Clear existing options
+            selectElement.innerHTML = '';
+            // Add default option
+            const defaultOption = document.createElement('option');
+            defaultOption.value = "";
+            defaultOption.textContent = "Selecciona un año";
+            selectElement.appendChild(defaultOption);
 
-        // Escucha el evento de envío del formulario (solo se activa en el último paso)
+            for (let i = 0; i < 10; i++) {
+                const startYear = currentYear + i;
+                const endYear = startYear + 1;
+                const option = document.createElement('option');
+                option.value = `${startYear}-${endYear}`;
+                option.textContent = `${startYear}-${endYear}`;
+                selectElement.appendChild(option);
+            }
+        }
+        // Call function to populate select on page load
+        populateAnoCursar();
+
+        // Logic to automatically calculate age
+        const fNacEstInput = document.getElementById('fNacEst');
+        const edadEstInput = document.getElementById('edadEst');
+
+        fNacEstInput.addEventListener('change', () => {
+            const birthDate = new Date(fNacEstInput.value);
+            if (isNaN(birthDate)) {
+                edadEstInput.value = '';
+                return;
+            }
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            edadEstInput.value = age >= 0 ? age : ''; // Ensure age is not negative
+        });
+
+        // Event listener for form submission (only activated on the last step)
         studentForm.addEventListener('submit', async (event) => {
-            event.preventDefault(); // Evita el envío tradicional del formulario
+            event.preventDefault(); // Prevent traditional form submission
 
-            // Muestra un mensaje de "generando..."
+            // Show "generating..." message
             formStatus.textContent = 'Generando ficha... Por favor, espera.';
             formStatus.classList.remove('hidden', 'text-green-600', 'text-red-600');
             formStatus.classList.add('text-gray-800');
-            documentLink.classList.add('hidden'); // Oculta el enlace anterior
+            documentLink.classList.add('hidden'); // Hide previous link
 
             try {
-                // Envía los datos del formulario usando fetch API
+                // Send form data using fetch API
                 const response = await fetch(studentForm.action, {
-                    method: 'POST', // Siempre POST para enviar datos
-                    body: new FormData(studentForm) // FormData maneja los campos del formulario
+                    method: 'POST', // Always POST to send data
+                    body: new FormData(studentForm) // FormData handles form fields
                 });
 
-                // Google Apps Script devolverá un JSON con 'result: success' y 'documentUrl' o 'result: error'
+                // Google Apps Script will return a JSON with 'result: success' and 'documentUrl' or 'result: error'
                 const data = await response.json();
 
                 if (data.result === 'success') {
                     formStatus.textContent = '¡Ficha generada con éxito!';
                     formStatus.classList.remove('text-gray-800', 'text-red-600');
                     formStatus.classList.add('text-green-600');
-                    studentForm.reset(); // Limpia el formulario
-                    updateVisibleSteps(); // Re-evalúa los pasos visibles y vuelve al inicio
-                    showCurrentStep(); // Vuelve al primer paso después de enviar
+                    // Do NOT reset form or go to first step immediately
+                    // The modal will handle the final interaction
+                    
+                    // Show confirmation modal
+                    confirmationModal.classList.add('show');
 
-                    // Muestra el enlace al documento generado
+                    // If document URL is available, update the link (optional, as they get it by email)
                     if (data.documentUrl) {
                         documentLinkAnchor.href = data.documentUrl;
-                        documentLink.classList.remove('hidden');
+                        // documentLink.classList.remove('hidden'); // Keep hidden as per new UX
                     }
 
                 } else {
@@ -576,10 +716,20 @@
             }
         });
 
-        // Configuración inicial al cargar la página
-        updateVisibleSteps(); // Construye el array inicial de pasos visibles
-        showCurrentStep(); // Muestra el primer paso
+        // Event listener for closing the modal
+        closeModalBtn.addEventListener('click', () => {
+            confirmationModal.classList.remove('show');
+            studentForm.reset(); // Reset form after closing modal
+            currentStepIndex = 0; // Reset to the first step
+            updateVisibleSteps(); // Re-evaluate visible steps and return to start
+            showCurrentStep(); // Show the first step after resetting
+            formStatus.classList.add('hidden'); // Hide status message after closing modal
+        });
+
+
+        // Initial setup on page load
+        updateVisibleSteps(); // Build initial array of visible steps
+        showCurrentStep(); // Show the first step
     </script>
 </body>
 </html>
-
