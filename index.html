@@ -25,6 +25,11 @@
             border-color: #6366f1 !important; /* Color índigo */
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5) !important; /* Sombra índigo */
         }
+        /* Estilo para campos con error de validación (vacíos o formato incorrecto) */
+        input.invalid, select.invalid, textarea.invalid {
+            border-color: #ef4444 !important; /* Rojo */
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.5) !important; /* Sombra roja */
+        }
 
         /* Estilos para el indicador de progreso */
         .progress-bar-container {
@@ -76,6 +81,16 @@
         }
         .modal-overlay.show .modal-content {
             transform: translateY(0);
+        }
+        /* Estilo para la previsualización de la imagen */
+        #imagePreview {
+            max-width: 150px;
+            max-height: 150px;
+            object-fit: contain;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+            border: 1px solid #e0e0e0;
+            display: block; /* Para que margin-top funcione */
         }
     </style>
 </head>
@@ -139,17 +154,17 @@
                         </div>
                         <div>
                             <label for="nomEst" class="block text-sm font-medium text-gray-700">Nombres:</label>
-                            <input type="text" name="nomEst" id="nomEst"
+                            <input type="text" name="nomEst" id="nomEst" data-required="true"
                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="apeEst" class="block text-sm font-medium text-gray-700">Apellidos:</label>
-                            <input type="text" name="apeEst" id="apeEst"
+                            <input type="text" name="apeEst" id="apeEst" data-required="true"
                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
                             <label for="ciEst" class="block text-sm font-medium text-gray-700">Cédula:</label>
-                            <input type="text" name="ciEst" id="ciEst" inputmode="numeric"
+                            <input type="text" name="ciEst" id="ciEst" inputmode="numeric" data-required="true"
                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
@@ -163,8 +178,9 @@
                         </div>
                         <div>
                             <label for="fNacEst" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento:</label>
-                            <input type="date" name="fNacEst" id="fNacEst"
+                            <input type="date" name="fNacEst" id="fNacEst" data-required="true"
                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
+                            <div id="edadWarning" class="text-red-500 text-sm mt-1 hidden"></div>
                         </div>
                         <div>
                             <label for="edadEst" class="block text-sm font-medium text-gray-700">Edad:</label>
@@ -256,6 +272,25 @@
                                     <option value="5°">5°</option>
                                 </select>
                             </div>
+                        </div>
+                        <!-- NUEVO CAMPO: REFERENCIA -->
+                        <div>
+                            <label for="referencia" class="block text-sm font-medium text-gray-700">Referencia:</label>
+                            <input type="text" name="referencia" id="referencia" inputmode="numeric"
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
+                        </div>
+                        <!-- NUEVO CAMPO: ADJUNTAR IMAGEN -->
+                        <div>
+                            <label for="studentImage" class="block text-sm font-medium text-gray-700">Adjuntar Imagen del Estudiante:</label>
+                            <input type="file" name="studentImage" id="studentImage" accept="image/*"
+                                   class="mt-1 block w-full text-sm text-gray-500
+                                   file:mr-4 file:py-2 file:px-4
+                                   file:rounded-full file:border-0
+                                   file:text-sm file:font-semibold
+                                   file:bg-indigo-50 file:text-indigo-700
+                                   hover:file:bg-indigo-100 transition-colors duration-200">
+                            <input type="hidden" name="studentImageBase64" id="studentImageBase64">
+                            <img id="imagePreview" src="" alt="Previsualización de la imagen" class="hidden mt-2 rounded-lg border border-gray-300">
                         </div>
                         <!-- ESTATURA - AHORA ES UN SELECT -->
                         <div>
@@ -473,7 +508,7 @@
                         </div>
                         <div>
                             <label for="corrRep" class="block text-sm font-medium text-gray-700">Correo Electrónico Representante:</label>
-                            <input type="email" name="corrRep" id="corrRep"
+                            <input type="email" name="corrRep" id="corrRep" data-required="true"
                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
                         </div>
                         <div>
@@ -624,11 +659,79 @@
             updateProgressBar();
         }
 
+        // --- Validation Function ---
+        function validateCurrentStep() {
+            let isValid = true;
+            let firstInvalidField = null;
+
+            // Clear previous errors
+            formStatus.classList.add('hidden');
+            formStatus.classList.remove('text-red-600');
+
+            // Define the fields that are explicitly required
+            const explicitlyRequiredFields = [
+                document.getElementById('nomEst'),
+                document.getElementById('apeEst'),
+                document.getElementById('ciEst'),
+                document.getElementById('fNacEst'),
+                document.getElementById('corrRep')
+            ];
+
+            // Add conditionally required sibling fields if 'Sí' is selected
+            if (tieneHermSelect.value === 'Sí') {
+                explicitlyRequiredFields.push(document.getElementById('nomHerm'));
+                explicitlyRequiredFields.push(document.getElementById('anoHerm'));
+            }
+
+            // Iterate through the explicitly required fields
+            for (const field of explicitlyRequiredFields) {
+                // Check if the field exists and is currently visible within the active step
+                // (This handles cases where a required field might be in a non-active step, or a hidden sibling field)
+                if (field && field.closest('.form-step.active')) {
+                    field.classList.remove('invalid'); // Reset invalid state
+                    let fieldValue = field.value.trim();
+
+                    if (!fieldValue) {
+                        isValid = false;
+                        field.classList.add('invalid');
+                        if (!firstInvalidField) firstInvalidField = field;
+                    }
+                }
+            }
+
+            // Specific age validation (always applies to fNacEst, which is in step 1)
+            const currentAge = parseInt(edadEstInput.value, 10);
+            if (fNacEstInput.closest('.form-step.active') && (isNaN(currentAge) || currentAge < 10 || currentAge > 18)) {
+                isValid = false;
+                fNacEstInput.classList.add('invalid'); // Highlight date field
+                edadWarning.textContent = 'La edad debe estar entre 10 y 18 años.';
+                edadWarning.classList.remove('hidden');
+                if (!firstInvalidField) firstInvalidField = fNacEstInput;
+            } else if (fNacEstInput.closest('.form-step.active')) { // Only hide if it's in the active step and valid
+                fNacEstInput.classList.remove('invalid');
+                edadWarning.classList.add('hidden');
+            }
+
+
+            if (!isValid) {
+                formStatus.textContent = 'Por favor, rellena todos los campos obligatorios marcados.';
+                formStatus.classList.remove('hidden');
+                formStatus.classList.add('text-red-600');
+                if (firstInvalidField) {
+                    firstInvalidField.focus(); // Focus on the first invalid field
+                }
+            }
+            return isValid;
+        }
+
+
         // Event listeners for navigation buttons
         nextStepBtn.addEventListener('click', () => {
-            if (currentStepIndex < visibleSteps.length - 1) {
-                currentStepIndex++;
-                showCurrentStep();
+            if (validateCurrentStep()) { // Validate before moving
+                if (currentStepIndex < visibleSteps.length - 1) {
+                    currentStepIndex++;
+                    showCurrentStep();
+                }
             }
         });
 
@@ -652,6 +755,11 @@
                 hermanoInfo.classList.remove('hidden');
             } else {
                 hermanoInfo.classList.add('hidden');
+                // Clear and remove invalid class from sibling fields if they become hidden
+                document.getElementById('nomHerm').value = '';
+                document.getElementById('nomHerm').classList.remove('invalid');
+                document.getElementById('anoHerm').value = '';
+                document.getElementById('anoHerm').classList.remove('invalid');
             }
         }
 
@@ -698,44 +806,106 @@
         populateEstatura();
 
 
-        // Logic to automatically calculate age
+        // Logic to automatically calculate age and validate range
         const fNacEstInput = document.getElementById('fNacEst');
         const edadEstInput = document.getElementById('edadEst');
+        const edadWarning = document.getElementById('edadWarning');
 
         fNacEstInput.addEventListener('change', () => {
-            const birthDate = new Date(fNacEstInput.value);
-            if (isNaN(birthDate)) {
+            const birthDateStr = fNacEstInput.value;
+            if (!birthDateStr) {
                 edadEstInput.value = '';
+                edadWarning.classList.add('hidden');
+                fNacEstInput.classList.remove('invalid'); // Use 'invalid' for general validation errors
                 return;
             }
+
+            const birthDate = new Date(birthDateStr);
+            if (isNaN(birthDate.getTime())) { // Check for invalid date
+                edadEstInput.value = '';
+                edadWarning.textContent = 'Fecha inválida.';
+                edadWarning.classList.remove('hidden');
+                fNacEstInput.classList.add('invalid');
+                return;
+            }
+
             const today = new Date();
             let age = today.getFullYear() - birthDate.getFullYear();
             const monthDiff = today.getMonth() - birthDate.getMonth();
             if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
                 age--;
             }
+
             edadEstInput.value = age >= 0 ? age : ''; // Ensure age is not negative
+
+            // Validate age range
+            if (age < 10 || age > 18) {
+                edadWarning.textContent = 'La edad debe estar entre 10 y 18 años.';
+                edadWarning.classList.remove('hidden');
+                fNacEstInput.classList.add('invalid'); // Use 'invalid' for general validation errors
+            } else {
+                edadWarning.classList.add('hidden');
+                fNacEstInput.classList.remove('invalid');
+            }
         });
 
         // --- Funciones para restringir la entrada de texto en tiempo real ---
 
         // Restringe a solo números
         function restrictToNumbers(event) {
-            // Permite solo dígitos. No permite el signo de más, menos, o punto decimal.
             this.value = this.value.replace(/[^0-9]/g, '');
+            // Remove invalid class on input if it's now valid
+            if (this.value.trim() !== '') {
+                this.classList.remove('invalid');
+            }
         }
 
         // Restringe a solo letras (incluyendo acentos y ñ) y espacios
         function restrictToLetters(event) {
-            // Permite letras (mayúsculas y minúsculas), letras acentuadas, ñ/Ñ y espacios
             this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '');
+            // Remove invalid class on input if it's now valid
+            if (this.value.trim() !== '') {
+                this.classList.remove('invalid');
+            }
         }
 
         // Restringe a letras, números, espacios y algunos símbolos comunes para direcciones/nombres de planteles
         function restrictToAlphanumericSpecial(event) {
-            // Permite letras, números, acentos, ñ/Ñ, espacios, puntos, comas y guiones
             this.value = this.value.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ\s.,-]/g, '');
+            // Remove invalid class on input if it's now valid
+            if (this.value.trim() !== '') {
+                this.classList.remove('invalid');
+            }
         }
+
+        // Add event listeners to remove 'invalid' class on input/change for explicitly required fields
+        const fieldsToMonitorForInvalidClass = [
+            document.getElementById('nomEst'),
+            document.getElementById('apeEst'),
+            document.getElementById('ciEst'),
+            document.getElementById('fNacEst'),
+            document.getElementById('corrRep'),
+            document.getElementById('nomHerm'), // Conditionally required
+            document.getElementById('anoHerm'),  // Conditionally required
+            document.getElementById('referencia') // New field, add to monitoring
+        ].filter(Boolean); // Filter out nulls if an ID doesn't exist
+
+        fieldsToMonitorForInvalidClass.forEach(field => {
+            if (field.tagName === 'SELECT' || field.type === 'date') {
+                field.addEventListener('change', () => {
+                    if (field.value.trim() !== '') {
+                        field.classList.remove('invalid');
+                    }
+                });
+            } else {
+                field.addEventListener('input', () => {
+                    if (field.value.trim() !== '') {
+                        field.classList.remove('invalid');
+                    }
+                });
+            }
+        });
+
 
         // Asignar las funciones de restricción a los campos correspondientes
         document.addEventListener('DOMContentLoaded', () => {
@@ -751,6 +921,7 @@
             document.getElementById('telHabRep').addEventListener('input', restrictToNumbers);
             document.getElementById('celRep').addEventListener('input', restrictToNumbers);
             document.getElementById('contEmerg').addEventListener('input', restrictToNumbers);
+            document.getElementById('referencia').addEventListener('input', restrictToNumbers); // New: Referencia field
 
             // Campos de solo letras
             document.getElementById('nomEst').addEventListener('input', restrictToLetters);
@@ -775,13 +946,40 @@
             document.getElementById('trabMad').addEventListener('input', restrictToAlphanumericSpecial);
             document.getElementById('trabPad').addEventListener('input', restrictToAlphanumericSpecial);
             document.getElementById('trabRep').addEventListener('input', restrictToAlphanumericSpecial);
-            // document.getElementById('anoHerm').addEventListener('input', restrictToAlphanumericSpecial); // Eliminado para el select de Año Hermano
+        });
+
+        // Image upload and preview logic
+        const studentImageInput = document.getElementById('studentImage');
+        const studentImageBase64Input = document.getElementById('studentImageBase64');
+        const imagePreview = document.getElementById('imagePreview');
+
+        studentImageInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.classList.remove('hidden');
+                    // Store Base64 string in a hidden input for submission
+                    studentImageBase64Input.value = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.src = '';
+                imagePreview.classList.add('hidden');
+                studentImageBase64Input.value = '';
+            }
         });
 
 
         // Event listener for form submission (only activated on the last step)
         studentForm.addEventListener('submit', async (event) => {
             event.preventDefault(); // Prevent traditional form submission
+
+            // Validate the final step before submission
+            if (!validateCurrentStep()) {
+                return; // Stop submission if validation fails
+            }
 
             // Show "generating..." message
             formStatus.textContent = 'Generando ficha... Por favor, espera.';
@@ -838,6 +1036,8 @@
             updateVisibleSteps(); // Re-evaluate visible steps and return to start
             showCurrentStep(); // Show the first step after resetting
             formStatus.classList.add('hidden'); // Hide status message after closing modal
+            imagePreview.src = ''; // Clear image preview
+            imagePreview.classList.add('hidden');
         });
 
 
