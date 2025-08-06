@@ -273,25 +273,6 @@
                                 </select>
                             </div>
                         </div>
-                        <!-- NUEVO CAMPO: REFERENCIA -->
-                        <div>
-                            <label for="referencia" class="block text-sm font-medium text-gray-700">Referencia:</label>
-                            <input type="text" name="referencia" id="referencia" inputmode="numeric"
-                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
-                        </div>
-                        <!-- NUEVO CAMPO: ADJUNTAR IMAGEN -->
-                        <div>
-                            <label for="fotoEst" class="block text-sm font-medium text-gray-700">Adjuntar Imagen del Estudiante:</label>
-                            <input type="file" name="fotoEst" id="fotoEst" accept="image/*"
-                                   class="mt-1 block w-full text-sm text-gray-500
-                                   file:mr-4 file:py-2 file:px-4
-                                   file:rounded-full file:border-0
-                                   file:text-sm file:font-semibold
-                                   file:bg-indigo-50 file:text-indigo-700
-                                   hover:file:bg-indigo-100 transition-colors duration-200">
-                            <input type="hidden" name="studentImageBase64" id="studentImageBase64">
-                            <img id="imagePreview" src="" alt="Previsualización de la imagen" class="hidden mt-2 rounded-lg border border-gray-300">
-                        </div>
                         <!-- ESTATURA - AHORA ES UN SELECT -->
                         <div>
                             <label for="estatura" class="block text-sm font-medium text-gray-700">Estatura (cm):</label>
@@ -525,6 +506,25 @@
                             <label for="autRetirar" class="block text-sm font-medium text-gray-700">Personas Autorizadas para Retirar al Menor:</label>
                             <textarea name="autRetirar" id="autRetirar" rows="2"
                                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 resize-y"></textarea>
+                        </div>
+                        <!-- CAMPO REFERENCIA (MOVIDO AQUÍ) -->
+                        <div>
+                            <label for="referencia" class="block text-sm font-medium text-gray-700">Referencia:</label>
+                            <input type="text" name="referencia" id="referencia" inputmode="numeric"
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
+                        </div>
+                        <!-- CAMPO ADJUNTAR IMAGEN (MOVIDO AQUÍ) -->
+                        <div>
+                            <label for="fotoEst" class="block text-sm font-medium text-gray-700">Adjuntar Imagen del Estudiante:</label>
+                            <input type="file" name="fotoEst" id="fotoEst" accept="image/*"
+                                   class="mt-1 block w-full text-sm text-gray-500
+                                   file:mr-4 file:py-2 file:px-4
+                                   file:rounded-full file:border-0
+                                   file:text-sm file:font-semibold
+                                   file:bg-indigo-50 file:text-indigo-700
+                                   hover:file:bg-indigo-100 transition-colors duration-200">
+                            <input type="hidden" name="fotoEstBase64" id="fotoEstBase64">
+                            <img id="imagePreview" src="" alt="Previsualización de la imagen" class="hidden mt-2 rounded-lg border border-gray-300">
                         </div>
                     </div>
                 </fieldset>
@@ -887,7 +887,7 @@
             document.getElementById('corrRep'),
             document.getElementById('nomHerm'), // Conditionally required
             document.getElementById('anoHerm'),  // Conditionally required
-            document.getElementById('referencia') // New field, add to monitoring
+            document.getElementById('referencia') // Now in step 4, still monitored
         ].filter(Boolean); // Filter out nulls if an ID doesn't exist
 
         fieldsToMonitorForInvalidClass.forEach(field => {
@@ -921,7 +921,7 @@
             document.getElementById('telHabRep').addEventListener('input', restrictToNumbers);
             document.getElementById('celRep').addEventListener('input', restrictToNumbers);
             document.getElementById('contEmerg').addEventListener('input', restrictToNumbers);
-            document.getElementById('referencia').addEventListener('input', restrictToNumbers); // New: Referencia field
+            document.getElementById('referencia').addEventListener('input', restrictToNumbers); // Now in step 4
 
             // Campos de solo letras
             document.getElementById('nomEst').addEventListener('input', restrictToLetters);
@@ -949,11 +949,11 @@
         });
 
         // Image upload and preview logic
-        const studentImageInput = document.getElementById('studentImage');
-        const studentImageBase64Input = document.getElementById('studentImageBase64');
+        const fotoEstInput = document.getElementById('fotoEst'); // Changed ID
+        const fotoEstBase64Input = document.getElementById('fotoEstBase64'); // Changed ID
         const imagePreview = document.getElementById('imagePreview');
 
-        studentImageInput.addEventListener('change', function() {
+        fotoEstInput.addEventListener('change', function() { // Changed event listener
             const file = this.files[0];
             if (file) {
                 const reader = new FileReader();
@@ -961,13 +961,13 @@
                     imagePreview.src = e.target.result;
                     imagePreview.classList.remove('hidden');
                     // Store Base64 string in a hidden input for submission
-                    studentImageBase64Input.value = e.target.result;
+                    fotoEstBase64Input.value = e.target.result; // Changed value assignment
                 };
                 reader.readAsDataURL(file);
             } else {
                 imagePreview.src = '';
                 imagePreview.classList.add('hidden');
-                studentImageBase64Input.value = '';
+                fotoEstBase64Input.value = ''; // Changed value assignment
             }
         });
 
@@ -1047,4 +1047,3 @@
     </script>
 </body>
 </html>
-
