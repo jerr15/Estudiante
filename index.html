@@ -230,10 +230,13 @@
                         </div>
                         <div class="md:col-span-2 flex items-center space-x-4">
                             <label class="block text-sm font-medium text-gray-700">Tiene hermanos en el plantel:</label>
-                            <input type="radio" name="tieneHerm" id="tieneHermSi" value="Sí" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded transition-colors duration-200">
-                            <label for="tieneHermSi" class="text-sm font-medium text-gray-700">Sí</label>
-                            <input type="radio" name="tieneHerm" id="tieneHermNo" value="No" checked class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded transition-colors duration-200">
-                            <label for="tieneHermNo" class="text-sm font-medium text-gray-700">No</label>
+                            <!-- CAMBIO DE RADIO BUTTONS A SELECT -->
+                            <select name="tieneHerm" id="tieneHerm"
+                                    class="mt-1 block px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200">
+                                <option value="" selected disabled>Selecciona</option> <!-- Nuevo placeholder -->
+                                <option value="No">No</option>
+                                <option value="Sí">Sí</option>
+                            </select>
                         </div>
                         <div id="hermanoInfo" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:col-span-2 hidden">
                             <div>
@@ -641,20 +644,18 @@
         enablePadreCheckbox.addEventListener('change', updateVisibleSteps);
 
         // Logic to show/hide sibling fields (within step 1)
-        const tieneHermSi = document.getElementById('tieneHermSi');
-        const tieneHermNo = document.getElementById('tieneHermNo');
+        const tieneHermSelect = document.getElementById('tieneHerm'); // Ahora es un select
         const hermanoInfo = document.getElementById('hermanoInfo');
 
         function toggleHermanoInfo() {
-            if (tieneHermSi.checked) {
+            if (tieneHermSelect.value === 'Sí') { // Comprobar el valor del select
                 hermanoInfo.classList.remove('hidden');
             } else {
                 hermanoInfo.classList.add('hidden');
             }
         }
 
-        tieneHermSi.addEventListener('change', toggleHermanoInfo);
-        tieneHermNo.addEventListener('change', toggleHermanoInfo);
+        tieneHermSelect.addEventListener('change', toggleHermanoInfo); // Listener para el select
         // Initialize on page load
         toggleHermanoInfo();
 
@@ -846,4 +847,3 @@
     </script>
 </body>
 </html>
-
