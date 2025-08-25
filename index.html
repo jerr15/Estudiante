@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ficha de Inscripción Estudiantil</title>
-    <!-- Carga de Tailwind CSS -->
+    <!-- Carga de Tailwind CSS para estilos rápidos y responsivos -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Carga de Google Fonts para una tipografía más elegante -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,6 +38,39 @@
         .modal-content {
             transition: transform 0.3s ease-in-out;
         }
+        .custom-select-container {
+            position: relative;
+        }
+        .custom-select-button {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #4a5568;
+            background-color: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            user-select: none;
+        }
+        .custom-select-options {
+            display: none;
+            position: absolute;
+            z-index: 10;
+            width: 100%;
+            margin-top: 0.25rem;
+            overflow: auto;
+            background-color: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.375rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .custom-select-options.show {
+            display: block;
+        }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
@@ -56,7 +89,7 @@
             <div id="progressBar" class="bg-indigo-600 h-2 rounded-full progress-bar"></div>
         </div>
 
-        <form action="https://script.google.com/macros/s/AKfycbxbf6PPA4FhqmTj7SHa6fVREft47NPGB4ZQ9Z7Lvr8gkzjvbc41tuWzYDTds4bsDEiLfw/exec" method="POST" id="studentForm">
+        <form action="https://script.google.com/macros/s/AKfycbwsQfB2Ke7l6_xT4vvSdQuPaAXybk16vdns6vyYgSMoz3Yh105--j-QnNxTsXGAh48H/exec" method="POST" id="studentForm">
 
             <div class="space-y-8">
                 <!-- Paso 1: Datos del Estudiante y Opciones -->
@@ -78,26 +111,26 @@
                         <legend class="text-xl font-semibold text-gray-700 mb-4 px-2">Datos del Estudiante</legend>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label for="ano_cursar" class="block text-sm font-medium text-gray-700">Año a Cursar:</label>
+                                <label for="ano_cursar" class="block text-sm font-medium text-gray-700">Año Escolar:</label>
                                 <select name="ano_cursar" id="ano_cursar" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></select>
                             </div>
                             <div>
-                                <label for="anoEsc" class="block text-sm font-medium text-gray-700">Año Escolar:</label>
+                                <label for="anoEsc" class="block text-sm font-medium text-gray-700">Año a Cursar:</label>
                                 <select name="anoEsc" id="anoEsc" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                                     <option value="">Selecciona</option><option value="1°">1°</option><option value="2°">2°</option><option value="3°">3°</option><option value="4°">4°</option><option value="5°">5°</option>
                                 </select>
                             </div>
                             <div>
                                 <label for="nomEst" class="block text-sm font-medium text-gray-700">Nombres:</label>
-                                <input type="text" name="nomEst" id="nomEst" data-required="true" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="nomEst" id="nomEst" data-required="true" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="50">
                             </div>
                             <div>
                                 <label for="apeEst" class="block text-sm font-medium text-gray-700">Apellidos:</label>
-                                <input type="text" name="apeEst" id="apeEst" data-required="true" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="apeEst" id="apeEst" data-required="true" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="50">
                             </div>
                             <div>
                                 <label for="ciEst" class="block text-sm font-medium text-gray-700">Cédula:</label>
-                                <input type="text" name="ciEst" id="ciEst" inputmode="numeric" data-required="true" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="ciEst" id="ciEst" inputmode="numeric" data-required="true" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="8">
                             </div>
                             <div>
                                 <label for="sexoEst" class="block text-sm font-medium text-gray-700">Sexo:</label>
@@ -116,7 +149,7 @@
                             </div>
                             <div>
                                 <label for="lugNacEst" class="block text-sm font-medium text-gray-700">Lugar de Nacimiento:</label>
-                                <input type="text" name="lugNacEst" id="lugNacEst" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="lugNacEst" id="lugNacEst" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="100">
                             </div>
                             <div>
                                 <label for="estNacEst" class="block text-sm font-medium text-gray-700">Estado de Nacimiento:</label>
@@ -126,19 +159,19 @@
                             </div>
                             <div>
                                 <label for="plantelProc" class="block text-sm font-medium text-gray-700">Plantel de Procedencia:</label>
-                                <input type="text" name="plantelProc" id="plantelProc" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="plantelProc" id="plantelProc" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="100">
                             </div>
                             <div class="md:col-span-2">
                                 <label for="dirHabEst" class="block text-sm font-medium text-gray-700">Dirección de Habitación:</label>
-                                <textarea name="dirHabEst" id="dirHabEst" rows="2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 resize-y"></textarea>
+                                <textarea name="dirHabEst" id="dirHabEst" rows="2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 resize-y" maxlength="110"></textarea>
                             </div>
                             <div class="md:col-span-2">
                                 <label for="enfDisc" class="block text-sm font-medium text-gray-700">Alguna Enfermedad y/o Discapacidad:</label>
-                                <input type="text" name="enfDisc" id="enfDisc" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="enfDisc" id="enfDisc" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="100">
                             </div>
                             <div>
                                 <label for="corrEst" class="block text-sm font-medium text-gray-700">Correo Electrónico Estudiante:</label>
-                                <input type="email" name="corrEst" id="corrEst" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="email" name="corrEst" id="corrEst" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="100">
                             </div>
                             <div>
                                 <label for="estatura" class="block text-sm font-medium text-gray-700">Estatura (cm):</label>
@@ -158,7 +191,7 @@
                             </div>
                             <div class="md:col-span-2">
                                 <label for="actInt" class="block text-sm font-medium text-gray-700">Actividad de Interés:</label>
-                                <input type="text" name="actInt" id="actInt" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="actInt" id="actInt" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="100">
                             </div>
                             <div class="md:col-span-2 flex items-center space-x-4">
                                 <label class="block text-sm font-medium text-gray-700">Tiene hermanos en el plantel:</label>
@@ -169,7 +202,7 @@
                             <div id="hermanoInfo" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:col-span-2 hidden">
                                 <div>
                                     <label for="nomHerm" class="block text-sm font-medium text-gray-700">Nombre Hermano:</label>
-                                    <input type="text" name="nomHerm" id="nomHerm" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    <input type="text" name="nomHerm" id="nomHerm" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="100">
                                 </div>
                                 <div>
                                     <label for="anoHerm" class="block text-sm font-medium text-gray-700">Año Hermano:</label>
@@ -189,43 +222,43 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="nomMad" class="block text-sm font-medium text-gray-700">Nombres y Apellidos:</label>
-                                <input type="text" name="nomMad" id="nomMad" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="nomMad" id="nomMad" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="100">
                             </div>
                             <div>
                                 <label for="ciMad" class="block text-sm font-medium text-gray-700">C.I.:</label>
-                                <input type="text" name="ciMad" id="ciMad" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="ciMad" id="ciMad" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="8">
                             </div>
                             <div>
                                 <label for="telHabMad" class="block text-sm font-medium text-gray-700">Teléfono Habitación (NO CELULAR):</label>
-                                <input type="tel" name="telHabMad" id="telHabMad" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="tel" name="telHabMad" id="telHabMad" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="15">
                             </div>
                             <div>
                                 <label for="celMad" class="block text-sm font-medium text-gray-700">Celular:</label>
-                                <input type="tel" name="celMad" id="celMad" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="tel" name="celMad" id="celMad" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="15">
                             </div>
                             <div class="md:col-span-2">
                                 <label for="dirHabMad" class="block text-sm font-medium text-gray-700">Dirección de Habitación:</label>
-                                <textarea name="dirHabMad" id="dirHabMad" rows="2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 resize-y"></textarea>
+                                <textarea name="dirHabMad" id="dirHabMad" rows="2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 resize-y" maxlength="110"></textarea>
                             </div>
                             <div>
                                 <label for="profMad" class="block text-sm font-medium text-gray-700">Profesión:</label>
-                                <input type="text" name="profMad" id="profMad" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="profMad" id="profMad" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="100">
                             </div>
                             <div>
                                 <label for="trabMad" class="block text-sm font-medium text-gray-700">Dónde Trabaja:</label>
-                                <input type="text" name="trabMad" id="trabMad" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="trabMad" id="trabMad" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="100">
                             </div>
                             <div>
                                 <label for="cargoMad" class="block text-sm font-medium text-gray-700">Cargo:</label>
-                                <input type="text" name="cargoMad" id="cargoMad" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="cargoMad" id="cargoMad" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="100">
                             </div>
                             <div class="md:col-span-2">
                                 <label for="dirTrabMad" class="block text-sm font-medium text-gray-700">Dirección del Trabajo:</label>
-                                <textarea name="dirTrabMad" id="dirTrabMad" rows="2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 resize-y"></textarea>
+                                <textarea name="dirTrabMad" id="dirTrabMad" rows="2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 resize-y" maxlength="110"></textarea>
                             </div>
                             <div>
                                 <label for="corrMad" class="block text-sm font-medium text-gray-700">Correo Electrónico Madre:</label>
-                                <input type="email" name="corrMad" id="corrMad" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="email" name="corrMad" id="corrMad" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="100">
                             </div>
                         </div>
                     </fieldset>
@@ -238,43 +271,43 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="nomPad" class="block text-sm font-medium text-gray-700">Nombres y Apellidos:</label>
-                                <input type="text" name="nomPad" id="nomPad" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="nomPad" id="nomPad" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="100">
                             </div>
                             <div>
                                 <label for="ciPad" class="block text-sm font-medium text-gray-700">C.I.:</label>
-                                <input type="text" name="ciPad" id="ciPad" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="ciPad" id="ciPad" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="8">
                             </div>
                             <div>
                                 <label for="telHabPad" class="block text-sm font-medium text-gray-700">Teléfono Habitación (NO CELULAR):</label>
-                                <input type="tel" name="telHabPad" id="telHabPad" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="tel" name="telHabPad" id="telHabPad" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="15">
                             </div>
                             <div>
                                 <label for="celPad" class="block text-sm font-medium text-gray-700">Celular:</label>
-                                <input type="tel" name="celPad" id="celPad" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="tel" name="celPad" id="celPad" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="15">
                             </div>
                             <div class="md:col-span-2">
                                 <label for="dirHabPad" class="block text-sm font-medium text-gray-700">Dirección de Habitación:</label>
-                                <textarea name="dirHabPad" id="dirHabPad" rows="2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 resize-y"></textarea>
+                                <textarea name="dirHabPad" id="dirHabPad" rows="2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 resize-y" maxlength="110"></textarea>
                             </div>
                             <div>
                                 <label for="profPad" class="block text-sm font-medium text-gray-700">Profesión:</label>
-                                <input type="text" name="profPad" id="profPad" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="profPad" id="profPad" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="100">
                             </div>
                             <div>
                                 <label for="trabPad" class="block text-sm font-medium text-gray-700">Dónde Trabaja:</label>
-                                <input type="text" name="trabPad" id="trabPad" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="trabPad" id="trabPad" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="100">
                             </div>
                             <div>
                                 <label for="cargoPad" class="block text-sm font-medium text-gray-700">Cargo:</label>
-                                <input type="text" name="cargoPad" id="cargoPad" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="cargoPad" id="cargoPad" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="100">
                             </div>
                             <div class="md:col-span-2">
                                 <label for="dirTrabPad" class="block text-sm font-medium text-gray-700">Dirección del Trabajo:</label>
-                                <textarea name="dirTrabPad" id="dirTrabPad" rows="2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 resize-y"></textarea>
+                                <textarea name="dirTrabPad" id="dirTrabPad" rows="2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 resize-y" maxlength="110"></textarea>
                             </div>
                             <div>
                                 <label for="corrPad" class="block text-sm font-medium text-gray-700">Correo Electrónico Padre:</label>
-                                <input type="email" name="corrPad" id="corrPad" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="email" name="corrPad" id="corrPad" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="100">
                             </div>
                         </div>
                     </fieldset>
@@ -287,61 +320,96 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="nomRep" class="block text-sm font-medium text-gray-700">Nombres y Apellidos Representante:</label>
-                                <input type="text" name="nomRep" id="nomRep" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="nomRep" id="nomRep" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="100">
                             </div>
                             <div>
                                 <label for="ciRep" class="block text-sm font-medium text-gray-700">C.I.:</label>
-                                <input type="text" name="ciRep" id="ciRep" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="ciRep" id="ciRep" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="8">
                             </div>
                             <div>
                                 <label for="telHabRep" class="block text-sm font-medium text-gray-700">Teléfono Habitación (NO CELULAR):</label>
-                                <input type="tel" name="telHabRep" id="telHabRep" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="tel" name="telHabRep" id="telHabRep" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="15">
                             </div>
                             <div>
                                 <label for="celRep" class="block text-sm font-medium text-gray-700">Celular:</label>
-                                <input type="tel" name="celRep" id="celRep" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="tel" name="celRep" id="celRep" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="15">
                             </div>
                             <div class="md:col-span-2">
                                 <label for="dirHabRep" class="block text-sm font-medium text-gray-700">Dirección de Habitación:</label>
-                                <textarea name="dirHabRep" id="dirHabRep" rows="2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 resize-y"></textarea>
+                                <textarea name="dirHabRep" id="dirHabRep" rows="2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 resize-y" maxlength="110"></textarea>
                             </div>
                             <div>
                                 <label for="profRep" class="block text-sm font-medium text-gray-700">Profesión:</label>
-                                <input type="text" name="profRep" id="profRep" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="profRep" id="profRep" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="100">
                             </div>
                             <div>
                                 <label for="trabRep" class="block text-sm font-medium text-gray-700">Dónde Trabaja:</label>
-                                <input type="text" name="trabRep" id="trabRep" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="trabRep" id="trabRep" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="100">
                             </div>
                             <div>
                                 <label for="cargoRep" class="block text-sm font-medium text-gray-700">Cargo:</label>
-                                <input type="text" name="cargoRep" id="cargoRep" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="cargoRep" id="cargoRep" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="100">
                             </div>
                             <div class="md:col-span-2">
                                 <label for="dirTrabRep" class="block text-sm font-medium text-gray-700">Dirección del Trabajo:</label>
-                                <textarea name="dirTrabRep" id="dirTrabRep" rows="2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 resize-y"></textarea>
+                                <textarea name="dirTrabRep" id="dirTrabRep" rows="2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 resize-y" maxlength="110"></textarea>
                             </div>
                             <div>
                                 <label for="corrRep" class="block text-sm font-medium text-gray-700">Correo Electrónico Representante:</label>
-                                <input type="email" name="corrRep" id="corrRep" data-required="true" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="email" name="corrRep" id="corrRep" data-required="true" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="100">
                             </div>
                             <div>
                                 <label for="parentesco" class="block text-sm font-medium text-gray-700">Parentesco con el Estudiante:</label>
-                                <input type="text" name="parentesco" id="parentesco" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="parentesco" id="parentesco" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="50">
                             </div>
                             <div>
                                 <label for="contEmerg" class="block text-sm font-medium text-gray-700">Contacto de Emergencia (Teléfono):</label>
-                                <input type="tel" name="contEmerg" id="contEmerg" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="tel" name="contEmerg" id="contEmerg" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="15">
                             </div>
                             <div class="md:col-span-2">
                                 <label for="autRetirar" class="block text-sm font-medium text-gray-700">Personas Autorizadas para Retirar al Menor:</label>
-                                <textarea name="autRetirar" id="autRetirar" rows="2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 resize-y"></textarea>
+                                <textarea name="autRetirar" id="autRetirar" rows="2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 resize-y" maxlength="200"></textarea>
                             </div>
                             <div>
                                 <label for="referencia" class="block text-sm font-medium text-gray-700">Referencia:</label>
-                                <input type="text" name="referencia" id="referencia" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="referencia" id="referencia" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="50">
                             </div>
-                            <!-- CAMPOS NUEVOS AÑADIDOS -->
+                            <!-- CAMPO CANCELADO PERSONALIZADO -->
+                            <div class="md:col-span-2">
+                                <label for="cancelado" class="block text-sm font-medium text-gray-700">Cancelado:</label>
+                                <div class="relative mt-1">
+                                    <div id="cancelado-button" class="flex items-center justify-between w-full px-3 py-2 text-left bg-white border border-gray-300 rounded-md shadow-sm cursor-pointer focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+                                        <span class="block truncate">Selecciona</span>
+                                        <svg class="w-5 h-5 ml-2 -mr-1 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M10 3a.75.75 0 01.53.22l3.5 3.5a.75.75 0 01-1.06 1.06L10 4.81 7.03 7.78a.75.75 0 01-1.06-1.06l3.5-3.5A.75.75 0 0110 3zm-3.72 9.53a.75.75 0 011.06 0L10 15.19l2.97-2.97a.75.75 0 111.06 1.06l-3.5 3.5a.75.75 0 01-1.06 0l-3.5-3.5a.75.75 0 010-1.06z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div id="cancelado-options" class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg hidden">
+                                        <ul class="py-1 overflow-auto text-base leading-6 rounded-md shadow-xs max-h-60 focus:outline-none sm:text-sm sm:leading-5">
+                                            <li class="px-3 py-2">
+                                                <label class="flex items-center space-x-3">
+                                                    <input type="checkbox" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" value="MATRICULA">
+                                                    <span class="font-normal text-gray-700">MATRICULA</span>
+                                                </label>
+                                            </li>
+                                            <li class="px-3 py-2">
+                                                <label class="flex items-center space-x-3">
+                                                    <input type="checkbox" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" value="MENSUALIDAD">
+                                                    <span class="font-normal text-gray-700">MENSUALIDAD</span>
+                                                </label>
+                                            </li>
+                                            <li class="px-3 py-2">
+                                                <label class="flex items-center space-x-3">
+                                                    <input type="checkbox" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" value="SEGURO ESCOLAR">
+                                                    <span class="font-normal text-gray-700">SEGURO ESCOLAR</span>
+                                                </label>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <input type="hidden" name="cancelado" id="cancelado">
+                                </div>
+                            </div>
+                            <!-- CAMPOS DE PAGO ORIGINALES -->
                             <div>
                                 <label for="tipoPago" class="block text-sm font-medium text-gray-700">Tipo de Pago:</label>
                                 <select name="tipoPago" id="tipoPago" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
@@ -352,7 +420,7 @@
                             </div>
                             <div>
                                 <label for="montoPago" class="block text-sm font-medium text-gray-700">Monto:</label>
-                                <input type="text" name="montoPago" id="montoPago" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" name="montoPago" id="montoPago" inputmode="numeric" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" maxlength="20">
                             </div>
                             <div>
                                 <label for="moneda" class="block text-sm font-medium text-gray-700">Moneda:</label>
@@ -377,7 +445,7 @@
                             <div>
                                 <label for="mensualidadCancelada" class="block text-sm font-medium text-gray-700">Mensualidad Cancelada:</label>
                                 <select name="mensualidadCancelada" id="mensualidadCancelada" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                    <option value="">Selecciona un mes</option>
+                                    <option value="NINGUNO">NINGUNO</option> <!-- Nueva opción -->
                                     <option value="Enero">Enero</option>
                                     <option value="Febrero">Febrero</option>
                                     <option value="Marzo">Marzo</option>
@@ -391,8 +459,10 @@
                                     <option value="Noviembre">Noviembre</option>
                                     <option value="Diciembre">Diciembre</option>
                                 </select>
+                                <!-- TEXTO PEQUEÑO DEBAJO DE MENSUALIDAD CANCELADA -->
+                                <p class="text-xs text-gray-500 mt-1">Solo aplica si se ha cancelado una mensualidad. (SI CANCELÓ MENSUALIDAD ESPECIFICAR QUÉ MES ESTÁ CANCELANDO, DE NO SER ASÍ COLOCAR “NINGUNO”)</p>
                             </div>
-                            <!-- FIN DE CAMPOS NUEVOS -->
+                            <!-- CAMPO ADJUNTAR IMAGEN (AHORA COMPROBANTE DE PAGO) -->
                             <div>
                                 <label for="fotoEst" class="block text-sm font-medium text-gray-700">Adjuntar comprobante de pago:</label>
                                 <input type="file" name="fotoEst" id="fotoEst" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-100 file:text-indigo-700 hover:file:bg-indigo-200 transition-colors duration-200 cursor-pointer">
@@ -416,7 +486,11 @@
             </button>
             <button type="submit" form="studentForm" id="submitForm" class="hidden flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg transition-all duration-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
-                Generar Ficha
+                <span class="button-text">Generar Ficha</span>
+                <svg class="animate-spin h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
             </button>
         </div>
 
@@ -441,13 +515,10 @@
     </div>
 
     <script>
-        // --- TODO EL JAVASCRIPT PERMANECE EXACTAMENTE IGUAL ---
-        // No es necesario cambiar la lógica, solo los estilos.
-        // Pega aquí el contenido de tu etiqueta <script> anterior.
         const studentForm = document.getElementById('studentForm');
         const formStatus = document.getElementById('formStatus');
-        const documentLink = document.getElementById('documentLink');
-        const documentLinkAnchor = document.querySelector('#documentLink a');
+        const documentLink = document.getElementById('documentLink'); 
+        const documentLinkAnchor = document.querySelector('#documentLink a'); 
         const formDescription = document.getElementById('form-description');
         const progressBar = document.getElementById('progressBar');
 
@@ -480,7 +551,7 @@
             if (enablePadreCheckbox.checked) {
                 visibleSteps.push('step3');
             }
-            if (document.getElementById('step4')) {
+            if (document.getElementById('step4')) { 
                 visibleSteps.push('step4');
             }
             if (currentStepIndex >= visibleSteps.length) {
@@ -527,19 +598,44 @@
             formStatus.classList.remove('text-red-600');
 
             const currentStepDiv = document.querySelector('.form-step.active');
-            const requiredInputs = currentStepDiv.querySelectorAll('[data-required="true"]');
+            const requiredFields = currentStepDiv.querySelectorAll('[data-required="true"]');
 
-            requiredInputs.forEach(field => {
+            requiredFields.forEach(field => {
                 field.classList.remove('invalid');
-                if (field.value.trim() === '') {
+                let fieldValue = field.value.trim();
+
+                if (field.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fieldValue)) {
+                    isValid = false;
+                    field.classList.add('invalid');
+                    if (!firstInvalidField) firstInvalidField = field;
+                } else if (!fieldValue) {
                     isValid = false;
                     field.classList.add('invalid');
                     if (!firstInvalidField) firstInvalidField = field;
                 }
             });
 
+            const fNacEstInput = document.getElementById('fNacEst');
+            const edadEstInput = document.getElementById('edadEst');
+            const edadWarning = document.getElementById('edadWarning');
+
+            if (fNacEstInput && fNacEstInput.closest('.form-step.active')) {
+                const currentAge = parseInt(edadEstInput.value, 10);
+                if (isNaN(currentAge) || currentAge < 10 || currentAge > 18) {
+                    isValid = false;
+                    fNacEstInput.classList.add('invalid');
+                    edadWarning.textContent = 'La edad debe estar entre 10 y 18 años.';
+                    edadWarning.classList.remove('hidden');
+                    if (!firstInvalidField) firstInvalidField = fNacEstInput;
+                } else {
+                    fNacEstInput.classList.remove('invalid');
+                    edadWarning.classList.add('hidden');
+                }
+            }
+
+
             if (!isValid) {
-                formStatus.textContent = 'Por favor, rellena todos los campos obligatorios.';
+                formStatus.textContent = 'Por favor, rellena todos los campos obligatorios marcados y corrige los errores.';
                 formStatus.classList.remove('hidden');
                 formStatus.classList.add('text-red-600');
                 if (firstInvalidField) {
@@ -548,6 +644,7 @@
             }
             return isValid;
         }
+
 
         nextStepBtn.addEventListener('click', () => {
             if (validateCurrentStep()) {
@@ -657,6 +754,16 @@
             }
         });
 
+        // Function to convert input value to uppercase
+        function convertToUppercase(event) {
+            this.value = this.value.toUpperCase();
+            // Remove invalid class on input if it's now valid
+            if (this.value.trim() !== '') {
+                this.classList.remove('invalid');
+            }
+        }
+
+        // Functions for specific input restrictions (kept for consistency with previous versions)
         function restrictToNumbers(event) {
             this.value = this.value.replace(/[^0-9]/g, '');
             if (this.value.trim() !== '') {
@@ -679,6 +786,24 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Add uppercase conversion to all relevant text inputs and textareas
+            document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea').forEach(field => {
+                // Exclude date and number inputs as they don't handle text like others
+                if (field.type !== 'date' && field.type !== 'number') {
+                    field.addEventListener('input', convertToUppercase);
+                }
+            });
+
+            // Prevent line breaks in text, tel, and email inputs
+            document.querySelectorAll('input[type="text"], input[type="tel"], input[type="email"]').forEach(field => {
+                field.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                    }
+                });
+            });
+
+            // Specific input restrictions (from previous code)
             document.getElementById('ciEst').addEventListener('input', restrictToNumbers);
             document.getElementById('ciMad').addEventListener('input', restrictToNumbers);
             document.getElementById('ciPad').addEventListener('input', restrictToNumbers);
@@ -692,22 +817,8 @@
             document.getElementById('contEmerg').addEventListener('input', restrictToNumbers);
             document.getElementById('referencia').addEventListener('input', restrictToNumbers);
             document.getElementById('montoPago').addEventListener('input', restrictToNumbers);
-
-            document.getElementById('nomEst').addEventListener('input', restrictToLetters);
-            document.getElementById('apeEst').addEventListener('input', restrictToLetters);
-            document.getElementById('lugNacEst').addEventListener('input', restrictToLetters);
-            document.getElementById('nomMad').addEventListener('input', restrictToLetters);
-            document.getElementById('profMad').addEventListener('input', restrictToLetters);
-            document.getElementById('cargoMad').addEventListener('input', restrictToLetters);
-            document.getElementById('nomPad').addEventListener('input', restrictToLetters);
-            document.getElementById('profPad').addEventListener('input', restrictToLetters);
-            document.getElementById('cargoPad').addEventListener('input', restrictToLetters);
-            document.getElementById('nomRep').addEventListener('input', restrictToLetters);
-            document.getElementById('profRep').addEventListener('input', restrictToLetters);
-            document.getElementById('cargoRep').addEventListener('input', restrictToLetters);
-            document.getElementById('parentesco').addEventListener('input', restrictToLetters);
-            document.getElementById('nomHerm').addEventListener('input', restrictToLetters);
-
+            // Note: nomEst, apeEst, lugNacEst etc. already have the uppercase conversion via the general selector above.
+            // These specific restrictToLetters/AlphanumericSpecial will still apply their character filtering.
             document.getElementById('plantelProc').addEventListener('input', restrictToAlphanumericSpecial);
             document.getElementById('enfDisc').addEventListener('input', restrictToAlphanumericSpecial);
             document.getElementById('actInt').addEventListener('input', restrictToAlphanumericSpecial);
@@ -744,11 +855,52 @@
                 return;
             }
 
-            formStatus.textContent = 'Generando ficha... Por favor, espera.';
-            formStatus.classList.remove('hidden', 'text-green-600', 'text-red-600');
-            formStatus.classList.add('text-gray-800');
+            const ciEst = document.getElementById('ciEst').value;
+            const ano_cursar = document.getElementById('ano_cursar').value;
+
+            // Show loading animation
+            const buttonText = submitFormBtn.querySelector('.button-text');
+            const spinner = submitFormBtn.querySelector('.animate-spin');
+            buttonText.classList.add('hidden');
+            spinner.classList.remove('hidden');
             submitFormBtn.disabled = true;
             prevStepBtn.disabled = true;
+            formStatus.textContent = 'Verificando estudiante...';
+            formStatus.classList.remove('hidden', 'text-green-600', 'text-red-600');
+            formStatus.classList.add('text-gray-800');
+
+            // Check if student exists
+            try {
+                const checkUrl = new URL(studentForm.action);
+                checkUrl.searchParams.set('action', 'checkStudent');
+                checkUrl.searchParams.set('ciEst', ciEst);
+                checkUrl.searchParams.set('ano_cursar', ano_cursar);
+
+                const checkResponse = await fetch(checkUrl, {method: 'GET'});
+                const checkData = await checkResponse.json();
+
+                if (checkData.exists) {
+                    formStatus.textContent = 'Este estudiante ya está inscrito en el año escolar seleccionado.';
+                    formStatus.classList.add('text-red-600');
+                    buttonText.classList.remove('hidden');
+                    spinner.classList.add('hidden');
+                    submitFormBtn.disabled = false;
+                    prevStepBtn.disabled = false;
+                    return;
+                }
+            } catch (error) {
+                console.error('Error checking student:', error);
+                formStatus.textContent = 'Error al verificar el estudiante. Por favor, inténtalo de nuevo.';
+                formStatus.classList.add('text-red-600');
+                buttonText.classList.remove('hidden');
+                spinner.classList.add('hidden');
+                submitFormBtn.disabled = false;
+                prevStepBtn.disabled = false;
+                return;
+            }
+
+            // Proceed with form submission
+            formStatus.textContent = 'Generando ficha... Por favor, espera.';
 
             try {
                 const response = await fetch(studentForm.action, {
@@ -766,6 +918,8 @@
                     formStatus.classList.add('text-red-600');
                     submitFormBtn.disabled = false;
                     prevStepBtn.disabled = false;
+                    buttonText.classList.remove('hidden');
+                    spinner.classList.add('hidden');
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -773,6 +927,8 @@
                 formStatus.classList.add('text-red-600');
                 submitFormBtn.disabled = false;
                 prevStepBtn.disabled = false;
+                buttonText.classList.remove('hidden');
+                spinner.classList.add('hidden');
             }
         });
 
@@ -788,11 +944,57 @@
             imagePreview.classList.add('hidden');
             submitFormBtn.disabled = false;
             prevStepBtn.disabled = false;
+
+            const buttonText = submitFormBtn.querySelector('.button-text');
+            const spinner = submitFormBtn.querySelector('.animate-spin');
+            buttonText.classList.remove('hidden');
+            spinner.classList.add('hidden');
         });
 
         updateVisibleSteps();
         showCurrentStep();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const cancelButton = document.getElementById('cancelado-button');
+            const cancelOptions = document.getElementById('cancelado-options');
+            const canceladoInput = document.getElementById('cancelado');
+            const cancelCheckboxes = cancelOptions.querySelectorAll('input[type="checkbox"]');
+            const cancelButtonText = cancelButton.querySelector('span');
+
+            cancelButton.addEventListener('click', () => {
+                cancelOptions.classList.toggle('hidden');
+            });
+
+            const updateCanceladoValue = () => {
+                const selectedValues = [];
+                const selectedLabels = [];
+                cancelCheckboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        selectedValues.push(checkbox.value);
+                        selectedLabels.push(checkbox.nextElementSibling.textContent);
+                    }
+                });
+                canceladoInput.value = selectedValues.join(', ');
+                if (selectedLabels.length > 0) {
+                    cancelButtonText.textContent = selectedLabels.join(', ');
+                } else {
+                    cancelButtonText.textContent = 'Selecciona';
+                }
+            };
+
+            cancelCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateCanceladoValue);
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!cancelButton.contains(event.target) && !cancelOptions.contains(event.target)) {
+                    cancelOptions.classList.add('hidden');
+                }
+            });
+        });
     </script>
 </body>
 </html>
+
+
 
