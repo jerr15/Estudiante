@@ -848,7 +848,7 @@
             }
         });
 
-        studentForm.addEventListener('submit', async (event) => {
+        studentForm.addEventListener('submit', (event) => {
             event.preventDefault();
 
             if (!validateCurrentStep()) {
@@ -869,17 +869,14 @@
             formStatus.classList.remove('hidden', 'text-green-600', 'text-red-600');
             formStatus.classList.add('text-gray-800');
 
-            // Check if student exists
-            try {
-                const checkUrl = new URL(studentForm.action);
-                checkUrl.searchParams.set('action', 'checkStudent');
-                checkUrl.searchParams.set('ciEst', ciEst);
-                checkUrl.searchParams.set('ano_cursar', ano_cursar);
+            // Check if student exists using JSONP
+            const script = document.createElement('script');
+            const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+            window[callbackName] = function(data) {
+                document.body.removeChild(script);
+                delete window[callbackName];
 
-                const checkResponse = await fetch(checkUrl, {method: 'GET'});
-                const checkData = await checkResponse.json();
-
-                if (checkData.exists) {
+                if (data.exists) {
                     formStatus.textContent = 'Este estudiante ya está inscrito en el año escolar seleccionado.';
                     formStatus.classList.add('text-red-600');
                     buttonText.classList.remove('hidden');
@@ -888,18 +885,16 @@
                     prevStepBtn.disabled = false;
                     return;
                 }
-            } catch (error) {
-                console.error('Error checking student:', error);
-                formStatus.textContent = 'Error al verificar el estudiante. Por favor, inténtalo de nuevo.';
-                formStatus.classList.add('text-red-600');
-                buttonText.classList.remove('hidden');
-                spinner.classList.add('hidden');
-                submitFormBtn.disabled = false;
-                prevStepBtn.disabled = false;
-                return;
-            }
 
-            // Proceed with form submission
+                // Proceed with form submission
+                submitForm();
+            };
+
+            script.src = studentForm.action.replace('/exec', '/gexec') + `?action=checkStudent&ciEst=${ciEst}&ano_cursar=${ano_cursar}&callback=${callbackName}`;
+            document.body.appendChild(script);
+        });
+
+        async function submitForm() {
             formStatus.textContent = 'Generando ficha... Por favor, espera.';
 
             try {
@@ -918,6 +913,8 @@
                     formStatus.classList.add('text-red-600');
                     submitFormBtn.disabled = false;
                     prevStepBtn.disabled = false;
+                    const buttonText = submitFormBtn.querySelector('.button-text');
+                    const spinner = submitFormBtn.querySelector('.animate-spin');
                     buttonText.classList.remove('hidden');
                     spinner.classList.add('hidden');
                 }
@@ -927,10 +924,12 @@
                 formStatus.classList.add('text-red-600');
                 submitFormBtn.disabled = false;
                 prevStepBtn.disabled = false;
+                const buttonText = submitFormBtn.querySelector('.button-text');
+                const spinner = submitFormBtn.querySelector('.animate-spin');
                 buttonText.classList.remove('hidden');
                 spinner.classList.add('hidden');
             }
-        });
+        }
 
         closeModalBtn.addEventListener('click', () => {
             confirmationModal.classList.add('opacity-0', 'pointer-events-none');
@@ -995,7 +994,6 @@
     </script>
 </body>
 </html>
-
 
 
 
